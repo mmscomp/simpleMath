@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Simple Math</title>
+  <style>
+    #Canvas{
+     
+      border: 2pt solid green;
+    }
+  </style>
+</head>
+<body onload:"init();">
+  <canvas id="Canvas" width = 700 height = 500></canvas>
+  
+  <input type = "number" id = 'numIn'>
+  <button onclick = "aFunc()">hit me</button>
+  <script src ="kibo.js"></script>
+  <script>
+
+    var canvas, ctx, numText = [];//, score, y, x, u, v, numAr, num;
+    canvas = document.getElementById('Canvas');
+    ctx =canvas.getContext('2d');
+    var score = 0;
+      startAnimation();
+
+
+function clearCanvas(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+
+function NumT(x,y,u,v,vy){
+ this.x =x;
+ this.y=y;
+ this.u = u;
+ this.v = v;
+ this.vy = vy;
+
+    var numAr = [u.toString()+'+'+v.toString(), u.toString()+'-'+
+        v.toString(), u.toString()+'*'+v.toString()];//'1+2';
+     var   num = numAr[parseInt(Math.random()*3)];
+
+    
+
+   this.draw = function(){
+    ctx.beginPath();
+    ctx.font = "20pt Ariel";
+    ctx.strokeStyle = 'red';
+    ctx.strokeText(num,this.x,this.y);
+   }
+
+   this.drop = function(){
+    this.y += this.vy;
+   }
+
+   this.update = function(){
+    var numAr = [this.u.toString()+'+'+this.v.toString(), this.u.toString()+'-'+
+    this.v.toString(), this.u.toString()+'*'+this.v.toString()];//'1+2';
+    num = numAr[parseInt(Math.random()*3)];
+
+   }
+}
+
+  function createNumT(n){
+    for(var i =0; i<n; i++){
+      var u = parseInt(Math.random()*10);
+      var v = parseInt(Math.random()*10);
+
+      numText[i] = new NumT(10+(i*120), 10, u,v, Math.random()*5);
+    }
+  }
+ 
+  createNumT(5);
+
+  function boundaryLimit(numT){
+    if(numT.y>canvas.height){
+      numT.vy =1;
+      numT.u = parseInt(Math.random()*10);
+      numT.v = parseInt(Math.random()*10);
+      numT.y=10;
+      numT.update();
+    }
+}
+     var id;
+  function animation(timeStamp){
+    
+    clearCanvas();
+
+    for(var i=0;i<numText.length;i++){
+      var numT = numText[i];
+      numT.drop();
+      numT.draw();
+      boundaryLimit(numT);
+   //   numT.draw();
+    };
+
+    // for(var j=0;j<numText.length;j++){
+   //  var getNum = getIt(numText[j]);
+ //  };
+
+
+  //  boundaryLimit();
+   /*   ctx.save();
+      ctx.font = '10pt calibri';
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'blue';
+      ctx.strokeText('Score:',canvas.width - 100,10);
+      ctx.restore();
+      ctx.font = '10pt calibri';
+      ctx.lineWidth = 1;
+
+      ctx.strokeStyle ='rgba(255,255,255,1)';  
+      ctx.strokeText(score, canvas.width-30, 10);
+
+      ctx.strokeStyle = 'black';  
+      ctx.strokeText(score, canvas.width-30, 10);
+
+      obj1.update();
+      obj1.render();
+     ctx.strokeStyle ='rgba(255,255,255,1)';
+      ctx.strokeText(num,x,y-3 );
+      ctx.strokeStyle = 'red';
+      ctx.strokeText(num, x, y);
+      if(y<=canvas.height -20 && x<10)
+        y+=1;
+      else if(x<=canvas.width -30 && y >=100) {
+      ctx.strokeStyle ='rgba(255,255,255,1)';
+      ctx.strokeText(num,x-20,y);
+        x+=1;
+      }
+      else if (x>=240 && y>10){
+      ctx.strokeStyle ='rgba(255,255,255,1)';
+      ctx.strokeText(num,x,y+1);
+        y -=1;
+      ctx.strokeStyle ='red';
+      ctx.strokeText(num,x,y);
+
+      }
+      else if (y>9){
+      ctx.strokeStyle ='rgba(255,255,255,1)';
+      ctx.strokeText(num,x,y);
+        x-=1;
+      ctx.strokeStyle ='red';
+      ctx.strokeText(num,x,y);
+
+      }*/
+      id = requestAnimationFrame(animation);
+    }
+
+    function startAnimation(){
+      id = requestAnimationFrame(animation);
+    }
+    function stopAnimation(){
+      if (id){
+        cancelAnimationFrame(id);
+      }
+    }
+//}
+   function getIt(num1){
+    var numRet1 =0;
+    var oper;
+     var numArr = num1.split("");
+     for(var i=1; i<numArr.length; i++){
+      if(numArr[i]==='+'|| numArr[i]=='-'||numArr[i]=='*')
+        oper = numArr[i];
+      else
+      {
+    
+         switch(oper){
+          case "+":
+         
+                 numRet1 = parseInt(numArr[i-2]);//parseInt(numArr[i-1])+parseInt(i+1);
+                 numRet1 += parseInt(numArr[i]);
+                 return numRet1;
+               
+          case "-":
+                 numRet1 = parseInt(numArr[i-2]);
+                 numRet1 -= parseInt(numArr[i]);
+                 return numRet1;
+
+               
+          case "*":
+                 numRet1 = parseInt(numArr[i-2]); 
+                 numRet1 *= parseInt(numArr[i]); 
+                 return numRet1;
+                     
+       }
+     }
+    
+     }
+     
+    }
+ /*    for(var j=0;j<numText.length;j++){
+     var getNum = getIt(numText[j]);
+   }*/
+      var k = new Kibo();
+
+      k.down(['esc','q'], function()
+        {
+         stopAnimation();
+      });
+      k.up(['s'], function(){
+        startAnimation();
+      });
+      
+  //    var p=0;
+      function aFunc(){
+        var p=0;
+       var m = document.getElementById("numIn").value;
+       p=parseInt(m);
+      ctx.strokeText(getNum,20,20);
+      ctx.strokeText(p, 40,20);
+       if (getNum===p){
+           score += 1;
+           ctx.strokeStyle='rgba(55,55,55,0.5)';
+           ctx.strokeText(num,x,y);  
+           ctx.strokeStyle='green';
+           stopAnimation();
+
+       }
+     }
+  </script>
+</body>
+</html>
